@@ -847,7 +847,7 @@ static int _add_job_to_res(struct job_record *job_ptr, int action)
 			continue;  /* node lost by job resize */
 
 		node_ptr = select_node_record[i].node_ptr;
-		if (action != 2) {
+		//if (action != 2) { //customized for gres release
 			if (select_node_usage[i].gres_list)
 				gres_list = select_node_usage[i].gres_list;
 			else
@@ -859,7 +859,7 @@ static int _add_job_to_res(struct job_record *job_ptr, int action)
 					      core_bitmap, job_ptr->user_id);
 			gres_plugin_node_state_log(gres_list, node_ptr->name);
 			FREE_NULL_BITMAP(core_bitmap);
-		}
+		//} //customized for gres release
 
 		if (action != 2) {
 			if (job->memory_allocated[n] == 0)
@@ -881,11 +881,11 @@ static int _add_job_to_res(struct job_record *job_ptr, int action)
 		}
 	}
 	
-	if (action != 2) {
+	//if (action != 2) { //customized for gres release
 		gres_build_job_details(job_ptr->gres_list,
 				       &job_ptr->gres_detail_cnt,
 				       &job_ptr->gres_detail_str);
-	}
+	//} //customized for gres release
 
 	/* add cores */
 	if (action != 1) {
@@ -1218,7 +1218,7 @@ static int _rm_job_from_res(struct part_res_record *part_record_ptr,
 			continue;  /* node lost by job resize */
 
 		node_ptr = node_record_table_ptr + i;
-		if (action != 2) {
+		//if (action != 2) { //customized for gres release
 			if (node_usage[i].gres_list)
 				gres_list = node_usage[i].gres_list;
 			else
@@ -1228,7 +1228,7 @@ static int _rm_job_from_res(struct part_res_record *part_record_ptr,
 						node_ptr->name, old_job,
 						job_ptr->user_id, job_fini);
 			gres_plugin_node_state_log(gres_list, node_ptr->name);
-		}
+		//} //customized for gres release
 
 		if (action != 2) {
 			if (node_usage[i].alloc_memory <
@@ -1636,7 +1636,8 @@ top:	orig_map = bit_copy(save_bitmap);
 			mode = slurm_job_preempt_mode(tmp_job_ptr);
 			if ((mode != PREEMPT_MODE_REQUEUE)    &&
 			    (mode != PREEMPT_MODE_CHECKPOINT) &&
-			    (mode != PREEMPT_MODE_CANCEL))
+			    (mode != PREEMPT_MODE_CANCEL) &&
+			    (mode != PREEMPT_MODE_SUSPEND)) //customized for gres release
 				continue;	/* can't remove job */
 			/* Remove preemptable job now */
 			_rm_job_from_res(future_part, future_usage,
@@ -1720,7 +1721,8 @@ top:	orig_map = bit_copy(save_bitmap);
 				mode = slurm_job_preempt_mode(tmp_job_ptr);
 				if ((mode != PREEMPT_MODE_REQUEUE)    &&
 				    (mode != PREEMPT_MODE_CHECKPOINT) &&
-				    (mode != PREEMPT_MODE_CANCEL))
+					(mode != PREEMPT_MODE_CANCEL) &&
+					(mode != PREEMPT_MODE_SUSPEND)) //customized for gres release
 					continue;
 				if (bit_overlap(bitmap,
 						tmp_job_ptr->node_bitmap) == 0)
