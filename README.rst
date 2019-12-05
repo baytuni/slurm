@@ -1,8 +1,14 @@
 Slurm Workload Manager
 --------------------------------------------------------
 
-This is the Slurm Workload Manager. Slurm
-is an open-source cluster resource management and job scheduling system
+This is slightly modified version 19.05.2 of Slurm Workload Manager. 
+select_cons_res plugin is modified to release gres resources of suspended 
+suspended jobs as well. The jobs must be submitted with --gres-flags=disable-binding.
+Alternatively in job_submit lua plugin GRES_DISABLE_BIND bitflag can be added to 
+job_desc.bitflags.
+
+
+Slurm is an open-source cluster resource management and job scheduling system
 that strives to be simple, scalable, portable, fault-tolerant, and
 interconnect agnostic. Slurm currently has been tested only under Linux.
 
